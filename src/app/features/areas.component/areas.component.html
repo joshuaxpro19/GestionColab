@@ -1,0 +1,172 @@
+<div class="p-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-1"><i class="bi bi-diagram-3"></i> Gestión de Áreas</h2>
+      <p class="text-muted mb-0">Administra las áreas organizacionales</p>
+    </div>
+    <button class="btn btn-primary" (click)="openNewModal()">
+      <i class="bi bi-plus-circle me-2"></i>Nueva Área
+    </button>
+  </div>
+
+  <!-- Buscador -->
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <div class="input-group">
+        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+        <input 
+          type="text" 
+          class="form-control border-start-0" 
+          placeholder="Buscar por nombre..."
+          [(ngModel)]="searchTerm"
+          (input)="filterAreas()">
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Cargando áreas...</p>
+  </div>
+
+  <!-- Grid de Áreas -->
+  <div *ngIf="!loading" class="row g-4">
+    <div class="col-12 col-md-6 col-lg-4" *ngFor="let area of filteredAreas">
+      <div class="card area-card h-100 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex align-items-start mb-3">
+            <div class="area-icon me-3" [style.background-color]="area.color">
+              <i class="bi bi-{{ area.icono || 'folder' }}"></i>
+            </div>
+            <div class="flex-grow-1">
+              <h5 class="card-title mb-1">{{ area.nombre }}</h5>
+              <p class="card-text text-muted small mb-0">{{ area.descripcion || 'Sin descripción' }}</p>
+            </div>
+          </div>
+          
+          <div class="d-flex gap-2 mt-3">
+            <button class="btn btn-sm btn-outline-primary flex-fill" (click)="viewArea(area)">
+              <i class="bi bi-eye"></i> Ver
+            </button>
+            <button class="btn btn-sm btn-outline-warning flex-fill" (click)="editArea(area)">
+              <i class="bi bi-pencil"></i> Editar
+            </button>
+            <button class="btn btn-sm btn-outline-danger flex-fill" (click)="deleteArea(area)">
+              <i class="bi bi-trash"></i> Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredAreas.length === 0" class="col-12">
+      <div class="alert alert-info text-center">
+        <i class="bi bi-info-circle fs-1 d-block mb-2"></i>
+        <p class="mb-0">No se encontraron áreas{{ searchTerm ? ' que coincidan con la búsqueda' : '' }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal CRUD -->
+<div class="modal fade" id="areaModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-{{ isEditMode ? 'pencil' : 'plus-circle' }} me-2"></i>
+          {{ isEditMode ? 'Editar' : 'Nueva' }} Área
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="areaForm">
+          <div class="mb-3">
+            <label class="form-label">Nombre <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="nombre" placeholder="Ej: Desarrollo">
+            <div *ngIf="areaForm.get('nombre')?.invalid && areaForm.get('nombre')?.touched" class="text-danger small mt-1">
+              El nombre es requerido
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            <textarea class="form-control" formControlName="descripcion" rows="3" placeholder="Descripción del área"></textarea>
+          </div>
+
+          <div class="row">
+            <div class="col-6 mb-3">
+              <label class="form-label">Ícono</label>
+              <input type="text" class="form-control" formControlName="icono" placeholder="Ej: code">
+              <small class="text-muted">Nombre del ícono de Bootstrap Icons</small>
+            </div>
+            <div class="col-6 mb-3">
+              <label class="form-label">Color</label>
+              <input type="color" class="form-control form-control-color" formControlName="color">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-2"></i>Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="saveArea()" [disabled]="areaForm.invalid || saving">
+          <span *ngIf="saving" class="spinner-border spinner-border-sm me-2"></span>
+          <i *ngIf="!saving" class="bi bi-check-circle me-2"></i>
+          {{ saving ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Vista -->
+<div class="modal fade" id="viewAreaModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-eye me-2"></i>Detalle del Área</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" *ngIf="selectedArea">
+        <div class="text-center mb-4">
+          <div class="area-icon-large mx-auto mb-3" [style.background-color]="selectedArea.color">
+            <i class="bi bi-{{ selectedArea.icono || 'folder' }}"></i>
+          </div>
+          <h4>{{ selectedArea.nombre }}</h4>
+        </div>
+        
+        <table class="table table-borderless">
+          <tr>
+            <th width="40%">Descripción:</th>
+            <td>{{ selectedArea.descripcion || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <th>Ícono:</th>
+            <td>{{ selectedArea.icono || 'N/A' }}</td>
+          </tr>
+          <tr>
+            <th>Color:</th>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="color-preview" [style.background-color]="selectedArea.color"></div>
+                {{ selectedArea.color || 'N/A' }}
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="bi bi-x-circle me-2"></i>Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

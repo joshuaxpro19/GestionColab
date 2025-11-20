@@ -29,7 +29,6 @@ export class DashboardComponent implements OnInit {
   }
 
   loadDashboardData() {
-    // Datos mock para las cards
     this.cards = this.dashboardService.getCards();
 
     this.dashboardService.getAreaMetrics().subscribe(data => {
@@ -46,10 +45,8 @@ export class DashboardComponent implements OnInit {
   }
 
   loadRealData() {
-    // Conectar con el backend real
     this.dashboardService.getMetricas().subscribe({
       next: (metricas) => {
-        console.log('✅ Métricas del backend:', metricas);
         // Actualizar las cards con datos reales
         this.cards = [
           {
@@ -58,55 +55,83 @@ export class DashboardComponent implements OnInit {
             footer: 'Actualizado hace 1 hora'
           },
           {
-            title: 'Asistencias Hoy',
+            title: 'Colaboradores Activos',
             description: metricas.asistenciasHoy,
             footer: 'Incremento del 5% este mes'
           },
           {
             title: 'Total Áreas',
             description: metricas.totalAreas,
-            footer: 'En los últimos 7 días'
+            footer: 'Departamentos activos'
           },
           {
             title: 'Total Sedes',
             description: metricas.totalSedes,
-            footer: 'Actualizadas'
+            footer: 'Sedes operativas'
           }
         ];
       },
       error: (error) => {
-        console.error('❌ Error al cargar métricas:', error);
-        console.log('ℹ️ Asegúrate de hacer login primero');
       }
     });
 
-    // Cargar distribución por áreas
     this.dashboardService.getDistribucionAreas().subscribe({
       next: (distribucion) => {
-        console.log('✅ Distribución por áreas:', distribucion);
-        // Convertir el objeto a array de IAreaMetric
+        const total = Object.values(distribucion).reduce((sum: number, val) => sum + (val as number), 0);
         this.areas = Object.entries(distribucion).map(([area, count]) => ({
           area,
           count: count as number,
-          percentage: 0 // Calcular si es necesario
+          percentage: total > 0 ? Math.round((count as number / total) * 100) : 0
         }));
       },
-      error: (error) => console.error('❌ Error:', error)
+      error: (error) => {}
     });
 
-    // Cargar distribución por sedes
     this.dashboardService.getDistribucionSedes().subscribe({
       next: (distribucion) => {
-        console.log('✅ Distribución por sedes:', distribucion);
-        // Convertir el objeto a array de ISedeMetric
-        this.sedes = Object.entries(distribucion).map(([location, data]: [string, any]) => ({
+        const sedesArray = Object.entries(distribucion).map(([location, data]: [string, any]) => ({
           location,
-          count: data.total || 0,
-          percentage: 0 // Calcular si es necesario
+          count: data.total || 0
+        }));
+        const totalSedes = sedesArray.reduce((sum, s) => sum + s.count, 0);
+        this.sedes = sedesArray.map(s => ({
+          ...s,
+          percentage: totalSedes > 0 ? Math.round((s.count / totalSedes) * 100) : 0
         }));
       },
-      error: (error) => console.error('❌ Error:', error)
+      error: (error) => {}
     });
+  }
+
+  // Funciones para el diseño
+  getCardIconClass(index: number): string {
+    const classes = [
+      'bg-primary bg-opacity-10 text-primary',
+      'bg-success bg-opacity-10 text-success',
+      'bg-warning bg-opacity-10 text-warning',
+      'bg-danger bg-opacity-10 text-danger'
+    ];
+    return classes[index] || classes[0];
+  }
+
+  getCardIcon(index: number): string {
+    const icons = [
+      'bi bi-people-fill',
+      'bi bi-person-check-fill',
+      'bi bi-grid-fill',
+      'bi bi-building-fill'
+    ];
+    return icons[index] || icons[0];
+  }
+
+  getAreaColor(index: number): string {
+    const colors = ['#6366f1', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6'];
+    return colors[index % colors.length];
+  }
+
+  getSedeBackground(index: number): string {
+    const backgrounds = ['#e0e7ff', '#fef3c7', '#fee2e2'];
+    return backgrounds[index % backgrounds.length];
   }
 }
 

@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ICollaborador } from '../dashboard.component/interface/Icolaborador';
 import { CardDashboardService } from '../../core/service/card-dashboard.service';
 import { ColaboradorService, Colaborador } from '../../core/service/colaborador.service';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { SedeService, Sede } from '../../core/service/sede.service';
+import { PuestoService, Puesto } from '../../core/service/puesto.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-colaboradores.component',
@@ -12,48 +16,69 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 })
 export class ColaboradoresComponent implements OnInit {
 
-collaboratorsList: ICollaborador[] = [];
-colaboradoresBackend: Colaborador[] = [];
-collaboratorForm: FormGroup;
+  collaboratorsList: ICollaborador[] = [];
+  filteredCollaborators: ICollaborador[] = [];
+  colaboradoresBackend: Colaborador[] = [];
+  collaboratorForm: FormGroup;
+  
+  sedesList: Sede[] = [];
+  puestosList: Puesto[] = [];
+  
+  searchText: string = '';
+  isEditMode: boolean = false;
+  isSaving: boolean = false;
+  selectedCollaborator: ICollaborador | null = null;
+  editingId: string | number | null = null;
+
+  private modalInstance: any;
+  private viewModalInstance: any;
 
   constructor(
     private dashboardService: CardDashboardService,
     private colaboradorService: ColaboradorService,
+    private sedeService: SedeService,
+    private puestoService: PuestoService,
     private fb: FormBuilder
   ) { 
     this.collaboratorForm = this.fb.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
-      dni: ['', [Validators.required, Validators.minLength(8)]],
-      phone: [''],
+      dni: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
+      phone: ['', [Validators.minLength(9), Validators.maxLength(9)]],
       email: ['', [Validators.required, Validators.email]],
-      startDate: [''],
+      startDate: ['', Validators.required],
       position: [''],
-      location: ['']
+      location: [''],
+      estado: ['Activo']
     });
   }
   
 
   ngOnInit(): void {
-    this.loadCollaborators();
     this.loadRealCollaborators();
+    this.loadSedes();
+    this.loadPuestos();
+    this.initializeModals();
   }
 
-  loadCollaborators(): void {
-    // Datos mock para desarrollo
-    this.dashboardService.getAllCollaborators().subscribe(data => {
-      this.collaboratorsList = data;
-    });
+  initializeModals(): void {
+    setTimeout(() => {
+      const modalElement = document.getElementById('collaboratorModal');
+      const viewModalElement = document.getElementById('viewModal');
+      if (modalElement) {
+        this.modalInstance = new bootstrap.Modal(modalElement);
+      }
+      if (viewModalElement) {
+        this.viewModalInstance = new bootstrap.Modal(viewModalElement);
+      }
+    }, 100);
   }
 
   loadRealCollaborators(): void {
-    // Cargar datos reales del backend
     this.colaboradorService.listarTodos().subscribe({
       next: (colaboradores) => {
-        console.log('✅ Colaboradores del backend:', colaboradores);
         this.colaboradoresBackend = colaboradores;
         
-        // Convertir formato backend a formato de la interfaz actual
         this.collaboratorsList = colaboradores.map(c => ({
           id: c.id!,
           name: `${c.nombre} ${c.apellido}`,
@@ -64,46 +89,139 @@ collaboratorForm: FormGroup;
           location: c.sede?.nombreSede || 'Sin sede',
           status: c.estado as 'Activo' | 'Inactivo' || 'Activo'
         }));
+        this.filteredCollaborators = [...this.collaboratorsList];
       },
-      error: (error) => {
-        console.error('❌ Error al cargar colaboradores:', error);
-        console.log('ℹ️ Asegúrate de hacer login primero');
-      }
+      error: (error) => {}
     });
   }
 
-  saveCollaborator(): void {
-    if (this.collaboratorForm.valid) {
-      const formData = this.collaboratorForm.value;
-      console.log('Datos a enviar al backend:', formData);
-      
-      // Crear colaborador en el backend
-      const nuevoColaborador: Colaborador = {
-        nombre: formData.name,
-        apellido: formData.surname,
-        dni: formData.dni,
-        telefono: formData.phone || '',
-        email: formData.email,
-        fechaIngreso: formData.startDate || new Date().toISOString().split('T')[0],
-        puesto: formData.position ? { id: formData.position } : undefined,
-        sede: formData.location ? { id: formData.location } : undefined
-      };
+  loadSedes(): void {
+    this.sedeService.listarTodas().subscribe({
+      next: (sedes) => {
+        this.sedesList = sedes;
+      },
+      error: (error) => {}
+    });
+  }
 
-      this.colaboradorService.crear(nuevoColaborador).subscribe({
-        next: (creado) => {
-          console.log('✅ Colaborador creado:', creado);
-          alert('Colaborador guardado exitosamente');
-          this.collaboratorForm.reset();
-          this.loadRealCollaborators(); // Recargar lista
+  loadPuestos(): void {
+    this.puestoService.listarTodos().subscribe({
+      next: (puestos) => {
+        this.puestosList = puestos;
+      },
+      error: (error) => {}
+    });
+  }
+
+  filterCollaborators(): void {
+    if (!this.searchText.trim()) {
+      this.filteredCollaborators = [...this.collaboratorsList];
+      return;
+    }
+    
+    const search = this.searchText.toLowerCase();
+    this.filteredCollaborators = this.collaboratorsList.filter(col =>
+      col.name.toLowerCase().includes(search) ||
+      col.dni.includes(search) ||
+      (col.email && col.email.toLowerCase().includes(search))
+    );
+  }
+
+  openNewModal(): void {
+    this.isEditMode = false;
+    this.editingId = null;
+    this.collaboratorForm.reset({
+      estado: 'Activo',
+      startDate: new Date().toISOString().split('T')[0]
+    });
+    this.modalInstance?.show();
+  }
+
+  viewCollaborator(col: ICollaborador): void {
+    this.selectedCollaborator = col;
+    this.viewModalInstance?.show();
+  }
+
+  editCollaborator(col: ICollaborador): void {
+    this.isEditMode = true;
+    this.editingId = col.id;
+    
+    // Buscar el colaborador completo del backend
+    const colBackend = this.colaboradoresBackend.find(c => c.id === col.id);
+    
+    this.collaboratorForm.patchValue({
+      name: colBackend?.nombre || col.name.split(' ')[0],
+      surname: colBackend?.apellido || col.name.split(' ')[1],
+      dni: col.dni,
+      phone: col.phone,
+      email: col.email,
+      startDate: colBackend?.fechaIngreso,
+      position: colBackend?.puesto?.id || '',
+      location: colBackend?.sede?.id || '',
+      estado: col.status
+    });
+    
+    this.modalInstance?.show();
+  }
+
+  deleteCollaborator(col: ICollaborador): void {
+    if (confirm(`¿Estás seguro de eliminar a ${col.name}?`)) {
+      const id = typeof col.id === 'string' ? parseInt(col.id) : col.id;
+      this.colaboradorService.eliminar(id).subscribe({
+        next: () => {
+          alert('Colaborador eliminado exitosamente');
+          this.loadRealCollaborators();
         },
         error: (error) => {
-          console.error('❌ Error al guardar:', error);
-          alert('Error al guardar colaborador');
+          alert('Error al eliminar el colaborador');
         }
       });
-    } else {
-      alert('Por favor completa los campos requeridos');
     }
+  }
+
+  saveCollaborator(): void {
+    if (this.collaboratorForm.invalid) {
+      Object.keys(this.collaboratorForm.controls).forEach(key => {
+        this.collaboratorForm.get(key)?.markAsTouched();
+      });
+      return;
+    }
+
+    this.isSaving = true;
+    const formData = this.collaboratorForm.value;
+    
+    const colaboradorData: Colaborador = {
+      nombre: formData.name,
+      apellido: formData.surname,
+      dni: formData.dni,
+      telefono: formData.phone || '',
+      email: formData.email,
+      fechaIngreso: formData.startDate,
+      estado: formData.estado,
+      puesto: formData.position ? { id: formData.position } : undefined,
+      sede: formData.location ? { id: formData.location } : undefined
+    };
+
+    const request = this.isEditMode && this.editingId
+      ? this.colaboradorService.actualizar(
+          typeof this.editingId === 'string' ? parseInt(this.editingId) : this.editingId,
+          colaboradorData
+        )
+      : this.colaboradorService.crear(colaboradorData);
+
+    request.subscribe({
+      next: (resultado) => {
+        alert(`Colaborador ${this.isEditMode ? 'actualizado' : 'guardado'} exitosamente`);
+        this.modalInstance?.hide();
+        this.collaboratorForm.reset();
+        this.loadRealCollaborators();
+        this.isSaving = false;
+      },
+      error: (error) => {
+        alert('Error al guardar el colaborador');
+        this.isSaving = false;
+      }
+    });
   }
 }
 

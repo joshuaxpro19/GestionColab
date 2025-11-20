@@ -26,28 +26,19 @@ export class AuthService {
   saveToken(token: string): void {
     if (this.isBrowser) {
       localStorage.setItem('token', token);
-      console.log('💾 Token guardado en localStorage');
-      console.log('Token (primeros 20 chars):', token.substring(0, 20) + '...');
-    } else {
-      console.warn('⚠️ No se puede guardar token: no estamos en el navegador');
     }
   }
 
-  getToken(): string | null {
-    if (this.isBrowser) {
-      const token = localStorage.getItem('token');
-      console.log('🔍 getToken() llamado, token existe:', token !== null);
-      return token;
+    getToken(): string | null {
+        if (this.isBrowser) {
+        return localStorage.getItem('token');
+        }
+        return null;
     }
-    console.warn('⚠️ getToken() llamado pero no estamos en el navegador');
-    return null;
-  }
 
   isAuthenticated(): boolean {
     const token = this.getToken();
-    const authenticated = token !== null && token.length > 0;
-    console.log('🔐 isAuthenticated():', authenticated);
-    return authenticated;
+    return token !== null && token.length > 0;
   }
 
   logout(): void {

@@ -6,7 +6,23 @@ import { AuthService } from '../../../core/service/auth.service';
   selector: 'app-sidebar',
   standalone: false,
   templateUrl: './sidebar.component.html',
-  styles: ``,
+  styles: `
+    .nav-link {
+      color: rgba(255, 255, 255, 0.75) !important;
+      transition: all 0.3s ease;
+    }
+    .nav-link:hover {
+      color: white !important;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 0.375rem;
+    }
+    .nav-link.active {
+      color: white !important;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 0.375rem;
+      font-weight: 600;
+    }
+  `,
 })
 export class SidebarComponent {
   
@@ -16,7 +32,6 @@ export class SidebarComponent {
   ) {}
 
   logout(): void {
-    console.log('🚪 Cerrando sesión...');
     this.authService.logout();
     this.router.navigate(['/dashboard/login']);
   }

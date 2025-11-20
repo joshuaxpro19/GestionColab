@@ -30,19 +30,10 @@ export class LoginComponent {
 
     this.authService.login(this.username, this.password).subscribe({
       next: (token) => {
-        console.log('✅ Login exitoso, token recibido');
-        console.log('Token (primeros 30 chars):', token.substring(0, 30) + '...');
         this.authService.saveToken(token);
-        
-        // Verificar que el token se guardó
-        const tokenGuardado = this.authService.getToken();
-        console.log('Verificación: ¿Token guardado?', tokenGuardado !== null);
-        
-        console.log('Navegando a /dashboard');
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
-        console.error('❌ Error en login:', error);
         this.isLoading = false;
         if (error.status === 401) {
           this.errorMessage = 'Usuario o contraseña incorrectos';

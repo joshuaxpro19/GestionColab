@@ -2,57 +2,42 @@
     <!-- <div class="row flex-nowrap"> -->
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                 <a routerLink="/dashboard" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                    <span class="fs-5 d-none d-sm-inline">Gestion Colaboradores</span>
+                    <span class="fs-5 d-none d-sm-inline">Gestión Colaboradores</span>
                 </a>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <!-- Dashboard / Inicio -->
                     <li class="nav-item">
-                        <a routerLink="/dashboard" routerLinkActive="active" class="nav-link align-middle px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
+                        <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link align-middle px-0 text-white">
+                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
-                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
-                            <li class="w-100">
-                                <a routerLink="/dashboard" routerLinkActive="active" class="nav-link px-0"> <span class="d-none d-sm-inline">Métricas</span>  </a>
-                            </li>
-                            <li>
-                                <a routerLink="/dashboard/lista-colaboradores" routerLinkActive="active" class="nav-link px-0"> <span class="d-none d-sm-inline">Colaboradores</span>  </a>
-                            </li>
-                        </ul>
+
+                    <!-- Colaboradores -->
+                    <li class="nav-item">
+                        <a routerLink="/dashboard/lista-colaboradores" routerLinkActive="active" class="nav-link align-middle px-0 text-white">
+                            <i class="fs-4 bi-people-fill"></i> <span class="ms-1 d-none d-sm-inline">Colaboradores</span>
+                        </a>
                     </li>
-                    <li>
-                        <a href="javascript:void(0)" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Capacitaciones</span></a>
+
+                    <!-- Sedes -->
+                    <li class="nav-item">
+                        <a routerLink="/dashboard/sedes" routerLinkActive="active" class="nav-link align-middle px-0 text-white">
+                            <i class="fs-4 bi-building-fill"></i> <span class="ms-1 d-none d-sm-inline">Sedes</span>
+                        </a>
                     </li>
-                    <li>
-                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                            <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Puestos</span></a>
-                        <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
-                            <li class="w-100">
-                                <a href="javascript:void(0)" class="nav-link px-0"> <span class="d-none d-sm-inline">Gestión Puestos</span></a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-link px-0"> <span class="d-none d-sm-inline">Crear Puesto</span></a>
-                            </li>
-                        </ul>
+
+                    <!-- Áreas -->
+                    <li class="nav-item">
+                        <a routerLink="/dashboard/areas" routerLinkActive="active" class="nav-link align-middle px-0 text-white">
+                            <i class="fs-4 bi-diagram-3"></i> <span class="ms-1 d-none d-sm-inline">Áreas</span>
+                        </a>
                     </li>
-                    <li>
-                        <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Areas</span> </a>
-                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
-                            <li class="w-100">
-                                <a href="javascript:void(0)" class="nav-link px-0"> <span class="d-none d-sm-inline">Gestión Áreas</span></a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0)" class="nav-link px-0"> <span class="d-none d-sm-inline">Crear Área</span></a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Sedes</span> </a>
+
+                    <!-- Puestos -->
+                    <li class="nav-item">
+                        <a routerLink="/dashboard/puestos" routerLinkActive="active" class="nav-link align-middle px-0 text-white">
+                            <i class="fs-4 bi-briefcase"></i> <span class="ms-1 d-none d-sm-inline">Puestos</span>
+                        </a>
                     </li>
                 </ul>
                 <hr>

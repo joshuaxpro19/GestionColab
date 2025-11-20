@@ -1,0 +1,202 @@
+<div class="p-4">
+  <!-- Header -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+    <div>
+      <h2 class="fw-bold text-dark mb-1">Gestión de Sedes</h2>
+      <p class="text-muted mb-0">Administra las sedes de la organización</p>
+    </div>
+    <div class="bg-white p-2 rounded-pill shadow-sm d-flex align-items-center pe-4">
+      <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
+        style="width: 45px; height: 45px;">
+        <i class="bi bi-building-fill fs-5"></i>
+      </div>
+      <div class="d-flex flex-column" style="line-height: 1.2;">
+        <span class="fw-bold text-dark">Admin</span>
+        <span class="text-muted small">Administrador</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card principal -->
+  <div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-4">
+      <!-- Título y acciones -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="card-title fw-bold mb-0">
+          <i class="bi bi-building-fill me-2 text-primary"></i>
+          Lista de Sedes
+          <span class="badge bg-primary rounded-pill ms-2">{{ sedesList.length }}</span>
+        </h5>
+      </div>
+
+      <!-- Buscador y botón nuevo -->
+      <div class="row mb-4 g-3">
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0 rounded-start-3 ps-3">
+              <i class="bi bi-search text-muted"></i>
+            </span>
+            <input type="text" 
+              class="form-control border-start-0 rounded-end-3 py-2"
+              placeholder="Buscar sede, ciudad o país..."
+              [(ngModel)]="searchText"
+              (input)="filterSedes()">
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-8 d-flex justify-content-end gap-2">
+          <button class="btn btn-outline-primary rounded-3" (click)="loadSedes()">
+            <i class="bi bi-arrow-clockwise me-1"></i> Actualizar
+          </button>
+          <button class="btn btn-primary text-white fw-semibold px-4 py-2 rounded-3 shadow-sm"
+            (click)="openNewModal()">
+            <i class="bi bi-plus-lg me-1"></i> Nueva Sede
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid de tarjetas -->
+      <div *ngIf="filteredSedes.length > 0; else noSedes" class="row g-4">
+        <div *ngFor="let sede of filteredSedes" class="col-12 col-md-6 col-lg-4">
+          <div class="card h-100 border-0 shadow-sm rounded-4 hover-shadow" style="transition: all 0.3s;">
+            <div class="card-body p-4">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center"
+                  style="width: 50px; height: 50px;">
+                  <i class="bi bi-building fs-4"></i>
+                </div>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-light rounded-circle" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end shadow">
+                    <li><a class="dropdown-item" (click)="viewSede(sede)"><i class="bi bi-eye me-2"></i> Ver</a></li>
+                    <li><a class="dropdown-item" (click)="editSede(sede)"><i class="bi bi-pencil me-2"></i> Editar</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" (click)="deleteSede(sede)"><i class="bi bi-trash me-2"></i> Eliminar</a></li>
+                  </ul>
+                </div>
+              </div>
+              <h5 class="card-title fw-bold mb-2">{{ sede.nombreSede }}</h5>
+              <p class="text-muted mb-2">
+                <i class="bi bi-geo-alt me-1"></i> {{ sede.ciudad }}, {{ sede.pais }}
+              </p>
+              <p class="text-muted small mb-0">
+                <i class="bi bi-pin-map me-1"></i> {{ sede.direccion }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noSedes>
+        <div class="text-center py-5">
+          <i class="bi bi-building-x fs-1 text-muted"></i>
+          <p class="text-muted mt-2 mb-0">No se encontraron sedes</p>
+          <button class="btn btn-primary mt-3" (click)="openNewModal()">
+            <i class="bi bi-plus-lg me-1"></i> Agregar la primera
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crear/Editar Sede -->
+<div class="modal fade" id="sedeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow">
+      <div class="modal-header bg-primary text-white border-0 px-4 py-3">
+        <div class="d-flex align-items-center gap-2">
+          <div class="rounded-circle border border-white d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+            <i [class]="isEditMode ? 'bi bi-pencil' : 'bi bi-plus-lg'"></i>
+          </div>
+          <h5 class="modal-title fw-bold mb-0">{{ isEditMode ? 'Editar' : 'Nueva' }} Sede</h5>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-4">
+        <form [formGroup]="sedeForm">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nombre de la Sede <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" placeholder="Ej: Sede Central" formControlName="nombreSede">
+            <div *ngIf="sedeForm.get('nombreSede')?.invalid && sedeForm.get('nombreSede')?.touched" class="text-danger small mt-1">
+              El nombre es requerido
+            </div>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Ciudad <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" placeholder="Ej: Lima" formControlName="ciudad">
+              <div *ngIf="sedeForm.get('ciudad')?.invalid && sedeForm.get('ciudad')?.touched" class="text-danger small mt-1">
+                La ciudad es requerida
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">País <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" placeholder="Ej: Perú" formControlName="pais">
+              <div *ngIf="sedeForm.get('pais')?.invalid && sedeForm.get('pais')?.touched" class="text-danger small mt-1">
+                El país es requerido
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3 mt-3">
+            <label class="form-label fw-semibold">Dirección <span class="text-danger">*</span></label>
+            <textarea class="form-control" rows="3" placeholder="Dirección completa" formControlName="direccion"></textarea>
+            <div *ngIf="sedeForm.get('direccion')?.invalid && sedeForm.get('direccion')?.touched" class="text-danger small mt-1">
+              La dirección es requerida
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer border-0 px-4 pb-4">
+        <button type="button" class="btn btn-outline-secondary rounded-3" data-bs-dismiss="modal">
+          <i class="bi bi-x-lg me-1"></i> Cancelar
+        </button>
+        <button type="button" class="btn btn-primary rounded-3" (click)="saveSede()" [disabled]="sedeForm.invalid || isSaving">
+          <i [class]="isSaving ? 'bi bi-hourglass-split' : 'bi bi-check-lg'" class="me-1"></i>
+          {{ isSaving ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ver Detalles -->
+<div class="modal fade" id="viewSedeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow">
+      <div class="modal-header bg-info text-white border-0">
+        <h5 class="modal-title fw-bold"><i class="bi bi-building-fill me-2"></i>Detalles de la Sede</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4" *ngIf="selectedSede">
+        <div class="text-center mb-4">
+          <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mx-auto"
+               style="width: 80px; height: 80px;">
+            <i class="bi bi-building fs-1"></i>
+          </div>
+        </div>
+        <h4 class="fw-bold text-dark text-center mb-4">{{ selectedSede.nombreSede }}</h4>
+        <div class="row g-3">
+          <div class="col-6">
+            <small class="text-muted d-block">Ciudad</small>
+            <p class="fw-semibold mb-0">{{ selectedSede.ciudad }}</p>
+          </div>
+          <div class="col-6">
+            <small class="text-muted d-block">País</small>
+            <p class="fw-semibold mb-0">{{ selectedSede.pais }}</p>
+          </div>
+          <div class="col-12">
+            <small class="text-muted d-block">Dirección</small>
+            <p class="fw-semibold mb-0">{{ selectedSede.direccion }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
