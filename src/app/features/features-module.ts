@@ -5,6 +5,7 @@ import { FeaturesRoutingModule } from './features-routing-module';
 import { DashboardComponent } from './dashboard.component/dashboard.component';
 import { SharedModule } from '../shared/shared-module';
 import { ColaboradoresComponent } from './colaboradores.component/colaboradores.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { ColaboradoresComponent } from './colaboradores.component/colaboradores.
   imports: [
     CommonModule,
     FeaturesRoutingModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule
   ]
 })
 export class FeaturesModule { }
