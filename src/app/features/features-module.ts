@@ -5,19 +5,22 @@ import { FeaturesRoutingModule } from './features-routing-module';
 import { DashboardComponent } from './dashboard.component/dashboard.component';
 import { SharedModule } from '../shared/shared-module';
 import { ColaboradoresComponent } from './colaboradores.component/colaboradores.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { LoginComponent } from './login.component/login.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 
 @NgModule({
   declarations: [
     DashboardComponent,
-    ColaboradoresComponent
+    ColaboradoresComponent,
+    LoginComponent
   ],
   imports: [
     CommonModule,
     FeaturesRoutingModule,
     SharedModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class FeaturesModule { }

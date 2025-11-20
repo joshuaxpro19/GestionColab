@@ -6,7 +6,7 @@ const routes: Routes = [
     path : 'dashboard', loadChildren: () => import('./features/features-module').then(m => m.FeaturesModule)
   },
   {
-    path: '', redirectTo: 'dashboard', pathMatch: 'full'
+    path: '', redirectTo: 'dashboard/login', pathMatch: 'full'
   }
 ];
 
