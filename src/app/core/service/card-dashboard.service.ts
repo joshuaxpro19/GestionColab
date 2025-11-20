@@ -1,14 +1,29 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { IAreaMetric, ISedeMetric } from '../../features/dashboard.component/interface/IArea';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ICollaborador } from '../../features/dashboard.component/interface/Icolaborador';
+import { environment } from '../../../environments/environment';
+import { AuthService } from './auth.service';
+
+export interface DashboardMetricas {
+  totalColaboradores: number;
+  asistenciasHoy: number;
+  totalAreas: number;
+  totalSedes: number;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class CardDashboardService {
+  private apiUrl = `${environment.apiUrl}/api/dashboard`;
 
-  constructor() { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) { }
   
   // Datos estáticos (Mock Data)
   private mockData: ICardDashboard[] = [
@@ -93,5 +108,24 @@ export class CardDashboardService {
 
   getCards(): ICardDashboard[] {
     return this.mockData;
+  }
+
+  // Métodos conectados al backend
+  getMetricas(): Observable<DashboardMetricas> {
+    return this.http.get<DashboardMetricas>(`${this.apiUrl}/metricas`, {
+      headers: this.authService.getAuthHeaders()
+    });
+  }
+
+  getDistribucionAreas(): Observable<{ [key: string]: number }> {
+    return this.http.get<{ [key: string]: number }>(`${this.apiUrl}/distribucion-areas`, {
+      headers: this.authService.getAuthHeaders()
+    });
+  }
+
+  getDistribucionSedes(): Observable<{ [key: string]: any }> {
+    return this.http.get<{ [key: string]: any }>(`${this.apiUrl}/distribucion-sedes`, {
+      headers: this.authService.getAuthHeaders()
+    });
   }
 }
