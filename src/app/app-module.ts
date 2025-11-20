@@ -3,6 +3,9 @@ import { BrowserModule, provideClientHydration, withEventReplay } from '@angular
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
+import { FeaturesModule } from './features/features-module';
+import { SidebarComponent } from './shared/components/sidebar.component/sidebar.component';
+import { SharedModule } from "./shared/shared-module";
 
 @NgModule({
   declarations: [
@@ -10,8 +13,10 @@ import { App } from './app';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
-  ],
+    AppRoutingModule,
+    FeaturesModule,
+    SharedModule
+],
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideClientHydration(withEventReplay())
