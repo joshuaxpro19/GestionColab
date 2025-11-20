@@ -4,5 +4,7 @@ export interface ICollaborador {
   dni: string;
   position: string;
   location: string; 
+  phone?: string;  // Nuevo campo
+  email?: string;
   status: 'Activo' | 'Inactivo';
 }
