@@ -87,6 +87,42 @@ export class CardDashboardService {
     return of(data);
   }
 
+  getAllCollaborators(): Observable<ICollaborador[]> {
+    const data: ICollaborador[] = [
+      { 
+        id: 1, 
+        name: 'Carlos Araujo Rojas', 
+        dni: '72345678', 
+        phone: '987654321',
+        email: 'carlos@empresa.com',
+        position: 'Desarrollador Senior', 
+        location: 'Lima - Sede Principal', 
+        status: 'Activo' 
+      },
+      { 
+        id: 2, 
+        name: 'Annie López Martínez', 
+        dni: '73456789', 
+        phone: '987654322',
+        email: 'annie@empresa.com',
+        position: 'Analista RRHH', 
+        location: 'Piura - Sede Norte', 
+        status: 'Activo' 
+      },
+      { 
+        id: 3, 
+        name: 'Joshua Vilela Calderón', 
+        dni: '74567890', 
+        phone: '987654323',
+        email: 'joshua@empresa.com',
+        position: 'Arquitecto de Software', 
+        location: 'Lima - Sede Principal', 
+        status: 'Activo' 
+      },
+    ];
+    return of(data);
+  }
+
 
   
 
