@@ -18,6 +18,21 @@ export interface Colaborador {
   sede?: { id: number; nombreSede?: string };
 }
 
+export interface ColaboradorConHistorial {
+  nombre: string;
+  apellido: string;
+  dni: string;
+  telefono: string;
+  email: string;
+  fechaIngreso: string;
+  estado?: string;
+  puestoId?: number;
+  sedeId?: number;
+  salario?: number;
+  modalidadId?: number;
+  responsabilidades?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,7 +42,7 @@ export class ColaboradorService {
   constructor(
     private http: HttpClient,
     private authService: AuthService
-  ) {}
+  ) { }
 
   listarTodos(): Observable<Colaborador[]> {
     return this.http.get<Colaborador[]>(this.apiUrl, {
@@ -55,6 +70,12 @@ export class ColaboradorService {
 
   crear(colaborador: Colaborador): Observable<Colaborador> {
     return this.http.post<Colaborador>(this.apiUrl, colaborador, {
+      headers: this.authService.getAuthHeaders()
+    });
+  }
+
+  crearConHistorial(colaborador: ColaboradorConHistorial): Observable<Colaborador> {
+    return this.http.post<Colaborador>(`${this.apiUrl}/con-historial`, colaborador, {
       headers: this.authService.getAuthHeaders()
     });
   }

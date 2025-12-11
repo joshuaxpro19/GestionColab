@@ -1,6 +1,6 @@
 <!-- <div class="container-fluid"> -->
 <!-- <div class="row flex-nowrap"> -->
-<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-4 text-white min-vh-100">
     <a routerLink="/dashboard"
         class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
         <span class="fs-5 d-none d-sm-inline">Gestión Colaboradores</span>
@@ -9,7 +9,7 @@
         <!-- Dashboard / Inicio -->
         <li class="nav-item">
             <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-                class="nav-link align-middle px-0 text-white">
+                class="nav-link align-middle text-white">
                 <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span>
             </a>
         </li>
@@ -17,42 +17,41 @@
         <!-- Colaboradores -->
         <li class="nav-item">
             <a routerLink="/dashboard/lista-colaboradores" routerLinkActive="active"
-                class="nav-link align-middle px-0 text-white">
+                class="nav-link align-middle text-white">
                 <i class="fs-4 bi-people-fill"></i> <span class="ms-1 d-none d-sm-inline">Colaboradores</span>
             </a>
         </li>
 
         <!-- Sedes -->
         <li class="nav-item">
-            <a routerLink="/dashboard/sedes" routerLinkActive="active" class="nav-link align-middle px-0 text-white">
-                <i class="fs-4 bi-building-fill"></i> <span class="ms-1 d-none d-sm-inline">Sedes</span>
+            <a routerLink="/dashboard/lista-sedes" routerLinkActive="active" class="nav-link align-middle text-white">
+                <i class="fs-4 bi-building"></i> <span class="ms-1 d-none d-sm-inline">Sedes</span>
             </a>
         </li>
 
         <!-- Áreas -->
         <li class="nav-item">
-            <a routerLink="/dashboard/areas" routerLinkActive="active" class="nav-link align-middle px-0 text-white">
+            <a routerLink="/dashboard/lista-areas" routerLinkActive="active" class="nav-link align-middle text-white">
                 <i class="fs-4 bi-diagram-3"></i> <span class="ms-1 d-none d-sm-inline">Áreas</span>
             </a>
         </li>
 
         <!-- Puestos -->
         <li class="nav-item">
-            <a routerLink="/dashboard/puestos" routerLinkActive="active" class="nav-link align-middle px-0 text-white">
+            <a routerLink="/dashboard/lista-puestos" routerLinkActive="active" class="nav-link align-middle text-white">
                 <i class="fs-4 bi-briefcase"></i> <span class="ms-1 d-none d-sm-inline">Puestos</span>
             </a>
         </li>
 
         <!-- Historial -->
         <li class="nav-item">
-            <a routerLink="/dashboard/historial" routerLinkActive="active"
-                class="nav-link align-middle px-0 text-white">
+            <a routerLink="/dashboard/historial" routerLinkActive="active" class="nav-link align-middle text-white">
                 <i class="fs-4 bi-clock-history"></i> <span class="ms-1 d-none d-sm-inline">Historial</span>
             </a>
         </li>
     </ul>
     <hr>
-    <div class="dropdown pb-4"> 
+    <div class="dropdown pb-4">
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
             <li><a class="dropdown-item" routerLink="/dashboard">Dashboard</a></li>
             <li><a class="dropdown-item" href="javascript:void(0)">Configuración</a></li>

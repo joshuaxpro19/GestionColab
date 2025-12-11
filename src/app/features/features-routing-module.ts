@@ -25,15 +25,15 @@ const routes: Routes = [
         component: ColaboradoresComponent
       },
       {
-        path: 'sedes',
+        path: 'lista-sedes',
         component: SedesComponent
       },
       {
-        path: 'areas',
+        path: 'lista-areas',
         component: AreasComponent
       },
       {
-        path: 'puestos',
+        path: 'lista-puestos',
         component: PuestosComponent
       },
       {

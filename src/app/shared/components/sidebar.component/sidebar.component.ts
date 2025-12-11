@@ -10,26 +10,29 @@ import { AuthService } from '../../../core/service/auth.service';
     .nav-link {
       color: rgba(255, 255, 255, 0.75) !important;
       transition: all 0.3s ease;
+      padding: 0.75rem 1rem !important;
+      margin-bottom: 0.5rem;
+      border-radius: 0.5rem;
+      display: block;
+      width: 100%;
     }
     .nav-link:hover {
       color: white !important;
       background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 0.375rem;
     }
     .nav-link.active {
       color: white !important;
       background-color: rgba(255, 255, 255, 0.2);
-      border-radius: 0.375rem;
       font-weight: 600;
     }
   `,
 })
 export class SidebarComponent {
-  
+
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   logout(): void {
     this.authService.logout();

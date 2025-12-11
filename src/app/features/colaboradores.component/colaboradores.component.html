@@ -1,6 +1,7 @@
 <div class="p-4">
   <!-- Header -->
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+  <div
+    class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
     <div>
       <h2 class="fw-bold text-dark mb-1">Gestión de Colaboradores</h2>
       <p class="text-muted mb-0">Administra la información de los colaboradores</p>
@@ -36,19 +37,15 @@
             <span class="input-group-text bg-white border-end-0 rounded-start-3 ps-3">
               <i class="bi bi-search text-muted"></i>
             </span>
-            <input type="text" 
-              class="form-control border-start-0 rounded-end-3 py-2"
-              placeholder="Buscar por nombre o DNI..."
-              [(ngModel)]="searchText"
-              (input)="filterCollaborators()">
+            <input type="text" class="form-control border-start-0 rounded-end-3 py-2"
+              placeholder="Buscar por nombre o DNI..." [(ngModel)]="searchText" (input)="filterCollaborators()">
           </div>
         </div>
         <div class="col-12 col-md-6 col-lg-8 d-flex justify-content-end gap-2">
           <button class="btn btn-outline-primary rounded-3" (click)="loadRealCollaborators()">
             <i class="bi bi-arrow-clockwise me-1"></i> Actualizar
           </button>
-          <button class="btn btn-primary text-white fw-semibold px-4 py-2 rounded-3 shadow-sm"
-            (click)="openNewModal()">
+          <button class="btn btn-primary text-white fw-semibold px-4 py-2 rounded-3 shadow-sm" (click)="openNewModal()">
             <i class="bi bi-plus-lg me-1"></i> Nuevo Colaborador
           </button>
         </div>
@@ -87,14 +84,20 @@
               </td>
               <td class="text-center">
                 <div class="btn-group" role="group">
-                  <button class="btn btn-sm btn-outline-info" (click)="viewCollaborator(col)" title="Ver detalles">
+                  <button class="btn btn-sm btn-outline-info px-2 py-1" (click)="viewCollaborator(col)"
+                    title="Ver detalles">
                     <i class="bi bi-eye-fill"></i>
+                    Ver detalles
                   </button>
-                  <button class="btn btn-sm btn-outline-warning" (click)="editCollaborator(col)" title="Editar">
+                  <button class="btn btn-sm btn-outline-warning px-2 py-1 mx-1" (click)="editCollaborator(col)"
+                    title="Editar">
                     <i class="bi bi-pencil-fill"></i>
+                    Editar
                   </button>
-                  <button class="btn btn-sm btn-outline-danger" (click)="deleteCollaborator(col)" title="Eliminar">
+                  <button class="btn btn-sm btn-outline-danger px-2 py-1" (click)="deleteCollaborator(col)"
+                    title="Eliminar">
                     <i class="bi bi-trash-fill"></i>
+                    Eliminar
                   </button>
                 </div>
               </td>
@@ -121,7 +124,8 @@
     <div class="modal-content rounded-4 border-0 shadow">
       <div class="modal-header bg-primary text-white border-0 px-4 py-3">
         <div class="d-flex align-items-center gap-2">
-          <div class="rounded-circle border border-white d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+          <div class="rounded-circle border border-white d-flex align-items-center justify-content-center"
+            style="width: 32px; height: 32px;">
             <i [class]="isEditMode ? 'bi bi-pencil' : 'bi bi-plus-lg'"></i>
           </div>
           <h5 class="modal-title fw-bold mb-0">{{ isEditMode ? 'Editar' : 'Nuevo' }} Colaborador</h5>
@@ -135,7 +139,8 @@
             <div class="col-md-6">
               <label class="form-label fw-semibold">Nombre <span class="text-danger">*</span></label>
               <input type="text" class="form-control" placeholder="Ej: Juan" formControlName="name">
-              <div *ngIf="collaboratorForm.get('name')?.invalid && collaboratorForm.get('name')?.touched" class="text-danger small mt-1">
+              <div *ngIf="collaboratorForm.get('name')?.invalid && collaboratorForm.get('name')?.touched"
+                class="text-danger small mt-1">
                 El nombre es requerido
               </div>
             </div>
@@ -143,7 +148,8 @@
             <div class="col-md-6">
               <label class="form-label fw-semibold">Apellido <span class="text-danger">*</span></label>
               <input type="text" class="form-control" placeholder="Ej: Pérez" formControlName="surname">
-              <div *ngIf="collaboratorForm.get('surname')?.invalid && collaboratorForm.get('surname')?.touched" class="text-danger small mt-1">
+              <div *ngIf="collaboratorForm.get('surname')?.invalid && collaboratorForm.get('surname')?.touched"
+                class="text-danger small mt-1">
                 El apellido es requerido
               </div>
             </div>
@@ -151,7 +157,8 @@
             <div class="col-md-6">
               <label class="form-label fw-semibold">DNI <span class="text-danger">*</span></label>
               <input type="text" class="form-control" placeholder="12345678" formControlName="dni" maxlength="8">
-              <div *ngIf="collaboratorForm.get('dni')?.invalid && collaboratorForm.get('dni')?.touched" class="text-danger small mt-1">
+              <div *ngIf="collaboratorForm.get('dni')?.invalid && collaboratorForm.get('dni')?.touched"
+                class="text-danger small mt-1">
                 DNI debe tener 8 dígitos
               </div>
             </div>
@@ -164,7 +171,8 @@
             <div class="col-12">
               <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
               <input type="email" class="form-control" placeholder="colaborador@empresa.com" formControlName="email">
-              <div *ngIf="collaboratorForm.get('email')?.invalid && collaboratorForm.get('email')?.touched" class="text-danger small mt-1">
+              <div *ngIf="collaboratorForm.get('email')?.invalid && collaboratorForm.get('email')?.touched"
+                class="text-danger small mt-1">
                 Email inválido
               </div>
             </div>
@@ -201,6 +209,28 @@
                 </option>
               </select>
             </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Salario Mensual (S/)</label>
+              <input type="number" class="form-control" placeholder="0.00" formControlName="salario" min="0"
+                step="0.01">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Modalidad de Trabajo</label>
+              <select class="form-select" formControlName="modalidad">
+                <option value="">Seleccionar modalidad</option>
+                <option *ngFor="let modalidad of modalidadesList" [value]="modalidad.id">
+                  {{ modalidad.title }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-semibold">Responsabilidades del Puesto</label>
+              <textarea class="form-control" rows="3" placeholder="Describe las responsabilidades principales..."
+                formControlName="responsabilidades"></textarea>
+            </div>
           </div>
         </form>
       </div>
@@ -209,7 +239,8 @@
         <button type="button" class="btn btn-outline-secondary rounded-3" data-bs-dismiss="modal">
           <i class="bi bi-x-lg me-1"></i> Cancelar
         </button>
-        <button type="button" class="btn btn-primary rounded-3" (click)="saveCollaborator()" [disabled]="collaboratorForm.invalid || isSaving">
+        <button type="button" class="btn btn-primary rounded-3" (click)="saveCollaborator()"
+          [disabled]="collaboratorForm.invalid || isSaving">
           <i [class]="isSaving ? 'bi bi-hourglass-split' : 'bi bi-check-lg'" class="me-1"></i>
           {{ isSaving ? 'Guardando...' : 'Guardar' }}
         </button>
@@ -252,7 +283,7 @@
             <small class="text-muted">Estado</small>
             <p class="mb-0">
               <span class="badge rounded-pill px-3 py-2"
-                    [ngClass]="selectedCollaborator.status === 'Activo' ? 'bg-success bg-opacity-25 text-success' : 'bg-danger bg-opacity-25 text-danger'">
+                [ngClass]="selectedCollaborator.status === 'Activo' ? 'bg-success bg-opacity-25 text-success' : 'bg-danger bg-opacity-25 text-danger'">
                 {{ selectedCollaborator.status }}
               </span>
             </p>

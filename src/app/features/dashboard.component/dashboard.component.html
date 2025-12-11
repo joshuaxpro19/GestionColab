@@ -6,11 +6,7 @@
                     <p class="text-muted mb-0">Bienvenido al panel de control</p>
                 </div>
                 <div class="bg-white p-2 rounded-pill shadow-sm d-flex align-items-center pe-4">
-                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
-                        style="width: 45px; height: 45px;">
-                        <i class="bi bi-person-fill fs-5"></i>
-                    </div>
-                    <div class="d-flex flex-column" style="line-height: 1.2;">
+                    <div class="d-flex flex-column px-4 py-2">
                         <span class="fw-bold text-dark">Admin</span>
                         <span class="text-muted small">Administrador</span>
                     </div>
@@ -23,18 +19,9 @@
                 <div class="col-12 col-sm-6 col-lg-3">
                     <div class="card border-0 shadow-sm rounded-4 h-100">
                         <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center" 
-                                     [ngClass]="getCardIconClass($index)"
-                                     style="width: 50px; height: 50px;">
-                                    <i [class]="getCardIcon($index)" class="fs-4"></i>
-                                </div>
-                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
-                                    <i class="bi bi-arrow-up me-1"></i> +5%
-                                </span>
-                            </div>
-                            <h3 class="fw-bold mb-2">{{card.description}}</h3>
-                            <p class="text-muted mb-0 small">{{card.title}}</p>
+                            
+                            <h3 class="fw-bold d-flex justify-content-center mb-2">{{card.description}}</h3>
+                            <p class=" d-flex justify-content-center text-muted mb-0 small">{{card.title}}</p>
                         </div>
                     </div>
                 </div>
@@ -52,9 +39,6 @@
                                     <i class="bi bi-bar-chart-fill me-2 text-primary"></i>
                                     Distribución por Área
                                 </h5>
-                                <button class="btn btn-sm btn-outline-secondary rounded-pill">
-                                    <i class="bi bi-download me-1"></i> Exportar
-                                </button>
                             </div>
 
                             <div *ngIf="areas.length > 0; else noAreas">
