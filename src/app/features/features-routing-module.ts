@@ -7,6 +7,7 @@ import { LoginComponent } from './login.component/login.component';
 import { SedesComponent } from './sedes.component/sedes.component';
 import { AreasComponent } from './areas.component/areas.component';
 import { PuestosComponent } from './puestos.component/puestos.component';
+import { HistorialComponent } from './historial.component/historial.component';
 import { authGuard } from '../core/guards/auth.guard';
 
 const routes: Routes = [
@@ -34,6 +35,10 @@ const routes: Routes = [
       {
         path: 'puestos',
         component: PuestosComponent
+      },
+      {
+        path: 'historial',
+        component: HistorialComponent
       }
     ]
   },

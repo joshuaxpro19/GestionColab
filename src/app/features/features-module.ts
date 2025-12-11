@@ -10,6 +10,7 @@ import { LoginComponent } from './login.component/login.component';
 import { SedesComponent } from './sedes.component/sedes.component';
 import { AreasComponent } from './areas.component/areas.component';
 import { PuestosComponent } from './puestos.component/puestos.component';
+import { HistorialComponent } from './historial.component/historial.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 
@@ -21,7 +22,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     LoginComponent,
     SedesComponent,
     AreasComponent,
-    PuestosComponent
+    PuestosComponent,
+    HistorialComponent
   ],
   imports: [
     CommonModule,
