@@ -1,3 +1,13 @@
+Antes de continuar aca le aviso que debe conectar la base de datos usamos mysql
+lo siguiente son las intrucciones rapidas para ejecutar sin data pero para poder acceder a la pagina, 
+
+su MySQL
+debe crearla primero
+CREATE DATABASE db_gestion_colaboradores;
+USE db_gestion_colaboradores;
+INSERT INTO t_usuario (password, rol, username)
+VALUES ('12345', 'admin', 'admin');
+
 # Gestion de Colaboradores - Proyecto Full Stack
 
 ## Descripción General
